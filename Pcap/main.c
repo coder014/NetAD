@@ -5,7 +5,7 @@
 #include <Windows.h>
 #include "func.h"
 
-#define THE_DEV "\\Device\\NPF_{640B66A2-8911-45EE-A955-DA940E350F34}"
+#define THE_DEV "REPLACE-THIS-WITH-YOUR-DEVID"
 
 pcap_if_t* thedev;
 HANDLE print_mutex;
