@@ -23,6 +23,12 @@
     <ClCompile Include="icmp.c">
       <Filter>源文件</Filter>
     </ClCompile>
+    <ClCompile Include="udp.c">
+      <Filter>源文件</Filter>
+    </ClCompile>
+    <ClCompile Include="tcp.c">
+      <Filter>源文件</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="func.h">

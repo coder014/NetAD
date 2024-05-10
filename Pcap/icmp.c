@@ -46,8 +46,8 @@ static void handle_icmp(u_char* param, const struct pcap_pkthdr* header, const u
     inet_ntop(AF_INET, pkt_data + 30, dst_ip, INET_ADDRSTRLEN);
 
     // 源和目的MAC地址
-    char src_mac[18];
-    char dst_mac[18];
+    char src_mac[32];
+    char dst_mac[32];
     sprintf(src_mac, "%02X:%02X:%02X:%02X:%02X:%02X", pkt_data[6], pkt_data[7], pkt_data[8], pkt_data[9], pkt_data[10], pkt_data[11]);
     sprintf(dst_mac, "%02X:%02X:%02X:%02X:%02X:%02X", pkt_data[0], pkt_data[1], pkt_data[2], pkt_data[3], pkt_data[4], pkt_data[5]);
 
@@ -79,7 +79,7 @@ DWORD WINAPI sniff_icmp(LPVOID lpParam) {
         fprintf(stderr, "Error in pcap_open_live: %s\n", errbuf);
         return -1;
     }
-    adapter_handles[1] = adapter_handle;
+    adapter_handles[PROTOCOL_ICMP] = adapter_handle;
     if (pcap_compile(adapter_handle, &fp, "icmp", 0, 0) == -1) {
         fprintf(stderr, "Error compiling filter: %s\n", errbuf);
         pcap_close(adapter_handle);

@@ -61,7 +61,7 @@ DWORD WINAPI sniff_arp(LPVOID lpParam) {
         fprintf(stderr, "Error in pcap_open_live: %s\n", errbuf);
         return -1;
     }
-    adapter_handles[0] = adapter_handle;
+    adapter_handles[PROTOCOL_ARP] = adapter_handle;
     if (pcap_compile(adapter_handle, &fp, "arp", 0, 0) == -1) {
         fprintf(stderr, "Error compiling filter: %s\n", errbuf);
         pcap_close(adapter_handle);

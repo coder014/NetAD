@@ -8,6 +8,14 @@ extern HANDLE print_mutex;
 extern pcap_if_t* thedev;
 extern pcap_t* adapter_handles[4];
 
+enum {
+	PROTOCOL_ARP = 0,
+	PROTOCOL_ICMP,
+	PROTOCOL_UDP,
+	PROTOCOL_TCP,
+	PROTOCOL_MAXN,
+};
+
 DWORD WINAPI sniff_arp(LPVOID lpParam);
 DWORD WINAPI sniff_icmp(LPVOID lpParam);
 DWORD WINAPI sniff_udp(LPVOID lpParam);

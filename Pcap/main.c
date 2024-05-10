@@ -10,7 +10,7 @@
 pcap_if_t* thedev;
 HANDLE print_mutex;
 HANDLE exit_event = NULL;
-HANDLE threads[4];
+HANDLE threads[PROTOCOL_MAXN];
 pcap_t* adapter_handles[4];
 
 BOOL WINAPI ConsoleHandler(DWORD dwCtrlType)
@@ -62,24 +62,35 @@ int main() {
         return -1;
     }
 
-    threads[0] = CreateThread(NULL, 0, sniff_arp, NULL, 0, NULL);
-    threads[1] = CreateThread(NULL, 0, sniff_icmp, NULL, 0, NULL);
-    if (!threads[0] || !threads[1]) {
-        fprintf(stderr, "Error creating thread\n");
-        pcap_freealldevs(alldevs);
-        return -1;
+    threads[PROTOCOL_ARP] = CreateThread(NULL, 0, sniff_arp, NULL, 0, NULL);
+    threads[PROTOCOL_ICMP] = CreateThread(NULL, 0, sniff_icmp, NULL, 0, NULL);
+    threads[PROTOCOL_UDP] = CreateThread(NULL, 0, sniff_udp, NULL, 0, NULL);
+    threads[PROTOCOL_TCP] = CreateThread(NULL, 0, sniff_tcp, NULL, 0, NULL);
+    for (int i = 0; i < PROTOCOL_MAXN; i++) {
+        if (!threads[i]) {
+            fprintf(stderr, "Error creating thread\n");
+            pcap_freealldevs(alldevs);
+            return -1;
+        }
     }
+
+    printf("Network packet sniffing started!\n");
 
     WaitForSingleObject(exit_event, INFINITE);
 
-    pcap_breakloop(adapter_handles[0]);
+    for (int i = 0; i < PROTOCOL_MAXN; i++) {
+        pcap_breakloop(adapter_handles[i]);
+    }
 
-    WaitForMultipleObjects(2, threads, TRUE, INFINITE);
+    WaitForMultipleObjects(PROTOCOL_MAXN, threads, TRUE, INFINITE);
 
     pcap_freealldevs(alldevs);
-    for (int i = 0; i < 2; i++) {
+    for (int i = 0; i < PROTOCOL_MAXN; i++) {
         CloseHandle(threads[i]);
     }
+
+    printf("Network packet sniffing stopped!\n");
+
     CloseHandle(print_mutex);
     CloseHandle(exit_event);
 
